@@ -26,11 +26,28 @@ public class StockAccount {
 		if (this.balance < userStock.getNumberOfShares() * userStock.getPriceOfStock()){
 			System.out.println("You cannot buy that much of this stock due to insufficient funds!");
 		}
+		
 		else{
+			if ((linkedStock != null) && (userStock.getStockSymbol().equals(linkedStock.getStockSymbol())) ){
 			this.balance = this.balance - userStock.getNumberOfShares() * userStock.getPriceOfStock();
 			this.linkedStock = userStock;
 			System.out.println("You have purchased: " + userStock.getNumberOfShares() + " of " + userStock.getStockSymbol());
 			System.out.println("At a cost of: " + userStock.getPriceOfStock() + " per stock.");
+			}
+			else{
+				if (linkedStock == null){
+					this.balance = this.balance - userStock.getNumberOfShares() * userStock.getPriceOfStock();
+					this.linkedStock = userStock;
+					System.out.println("You have purchased: " + userStock.getNumberOfShares() + " of " + userStock.getStockSymbol());
+					System.out.println("At a cost of: " + userStock.getPriceOfStock() + " per stock.");
+				}
+				else{
+					if (!(linkedStock.getStockSymbol().equals(userStock.getStockSymbol()))){
+						System.out.println("You can only buy one type of stock!");
+					}
+				}
+				
+			}
 		}
 		
 	}
@@ -58,10 +75,22 @@ public class StockAccount {
 		return linkedStock;
 	}
 	
-	public void printLinkedStock(){
-		System.out.println("Symbol: " + linkedStock.getStockSymbol());
-		System.out.println("Number of Shares: " + linkedStock.getNumberOfShares());
-		System.out.println("Cost per Share: " + linkedStock.getPriceOfStock());
+	public void sellStock(Stock sellThisStock){
+		if (!(sellThisStock.getStockSymbol().equals(linkedStock.getStockSymbol()))){
+			System.out.println("You don't own any shares of that stock.");
+		}
+		else{
+			if (sellThisStock.getNumberOfShares() > linkedStock.getNumberOfShares()){
+				System.out.println("You don't own that many shares, crazy!");
+			}
+			else{
+				balance = balance + (sellThisStock.getNumberOfShares() * sellThisStock.getPriceOfStock());
+				linkedStock.setNumberOfShares(linkedStock.getNumberOfShares() - sellThisStock.getNumberOfShares());
+				linkedStock.setPriceOfStock(sellThisStock.getPriceOfStock());
+				System.out.println("You sold " + sellThisStock.getNumberOfShares() + " of " + sellThisStock.getStockSymbol() + " for " + (sellThisStock.getNumberOfShares() * sellThisStock.getPriceOfStock()) + ".");
+				
+			}
+		}
 	}
 
 }
